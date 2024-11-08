@@ -1,4 +1,13 @@
 # OSX
+# React Native
+node_modules/
+*.log
+*.lock
+ios/Pods/
+android/app/build/
+*.swp
+.DS_Store
+.env
 #
 .DS_Store
 
