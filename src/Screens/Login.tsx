@@ -6,10 +6,9 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../Navigation/MainNavigation';
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonCustom from '../Componentes/Boton/ButtonCustom';
 import { AuthContext } from '../context/AuthContext';
-
+import api , {setAuthorizationHeader} from '../context/AxiosInstance';
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 type FormData = {
@@ -27,17 +26,14 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     try {
       const response = await axios.post(`${API_Backend}/login`, data);
       if (response.status === 200) {
-        const { token, id_usuario, tipo_cliente } = response.data;
-
-        // Actualizar el estado global
+        const { token, id_usuario, tipo_usuario} = response.data;
         setAuthState({
           id_usuario,
-          tipo_cliente,
+          tipo_usuario,
           token,
         });
-
-        // Navegar a la pantalla de perfil
-        navigation.navigate('Perfil', { userId: id_usuario });
+        setAuthorizationHeader(token);
+        navigation.replace('BottomNavigator');
       } else {
         Alert.alert('Error', 'Usuario o contraseña incorrectos');
       }

@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthState {
   id_usuario: string | null;
-  tipo_cliente: string | null;
+  tipo_usuario: string | null;
   token: string | null;
 }
 
@@ -17,7 +17,7 @@ interface Props {
 const AuthProvider: React.FC<Props> = ({ children }) => {
   const [authState, setAuthStateInternal] = useState<AuthState>({
     id_usuario: null,
-    tipo_cliente: null,
+    tipo_usuario: null,
     token: null,
   });
 
@@ -32,13 +32,13 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
     const loadAuthState = async () => {
       try {
         const id_usuario = await AsyncStorage.getItem('id_usuario');
-        const tipo_cliente = await AsyncStorage.getItem('tipo_cliente');
+        const tipo_usuario = await AsyncStorage.getItem('tipo_usuario');
         const token = await AsyncStorage.getItem('userToken');
 
-        if (id_usuario || tipo_cliente || token) {
+        if (id_usuario || tipo_usuario || token) {
           setAuthStateInternal({
             id_usuario,
-            tipo_cliente,
+            tipo_usuario,
             token,
           });
         }
@@ -59,10 +59,10 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
           await AsyncStorage.removeItem('id_usuario');
         }
   
-        if (authState.tipo_cliente !== null) {
-          await AsyncStorage.setItem('tipo_cliente', String(authState.tipo_cliente));
+        if (authState.tipo_usuario !== null) {
+          await AsyncStorage.setItem('tipo_usuario', String(authState.tipo_usuario));
         } else {
-          await AsyncStorage.removeItem('tipo_cliente');
+          await AsyncStorage.removeItem('tipo_usuario');
         }
   
         if (authState.token !== null) {
@@ -77,6 +77,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   
     saveAuthState();
   }, [authState]);
+
   return (
     <AuthContext.Provider
       value={{
