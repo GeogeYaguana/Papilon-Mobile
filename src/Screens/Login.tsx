@@ -33,7 +33,6 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
           token,
         });
         setAuthorizationHeader(token);
-        navigation.replace('BottomNavigator');
       } else {
         Alert.alert('Error', 'Usuario o contraseña incorrectos');
       }

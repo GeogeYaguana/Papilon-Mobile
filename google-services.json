@@ -1,0 +1,29 @@
+{
+    "project_info": {
+      "project_number": "820668029080",
+      "project_id": "papilon-baa86",
+      "storage_bucket": "papilon-baa86.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:820668029080:android:4e26af4d6ec2f2ce77d8ed",
+          "android_client_info": {
+            "package_name": "com.papilonmobile"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyAVSwGxbGdvBmC-fmt78Pj3DQxwE_itRBc"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }

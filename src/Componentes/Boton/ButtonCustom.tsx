@@ -38,9 +38,10 @@ const ButtonCustom: React.FC<ButtonCustomProps> = ({
       ]}
       onPress={onPress}
     >
-      <Text style={[styles.buttonText, { color: textColor, fontSize: adjustedFontSize }, textStyle]}>
-        {title}
-      </Text>
+    <Text style={[styles.buttonText, { color: textColor, fontSize: adjustedFontSize }, textStyle]}>
+      {String(title)}
+    </Text>
+
     </TouchableOpacity>
   );
 };

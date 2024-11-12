@@ -28,6 +28,21 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
     }));
   };
 
+  const logout = async () => {
+    try {
+      await AsyncStorage.removeItem('id_usuario');
+      await AsyncStorage.removeItem('tipo_usuario');
+      await AsyncStorage.removeItem('userToken');
+      setAuthStateInternal({
+        id_usuario: null,
+        tipo_usuario: null,
+        token: null,
+      });
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  };
+
   useEffect(() => {
     const loadAuthState = async () => {
       try {
@@ -58,13 +73,13 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
         } else {
           await AsyncStorage.removeItem('id_usuario');
         }
-  
+
         if (authState.tipo_usuario !== null) {
           await AsyncStorage.setItem('tipo_usuario', String(authState.tipo_usuario));
         } else {
           await AsyncStorage.removeItem('tipo_usuario');
         }
-  
+
         if (authState.token !== null) {
           await AsyncStorage.setItem('userToken', authState.token);
         } else {
@@ -74,7 +89,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
         console.error('Error al guardar el estado de autenticación:', error);
       }
     };
-  
+
     saveAuthState();
   }, [authState]);
 
@@ -83,6 +98,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
       value={{
         ...authState,
         setAuthState,
+        logout, // Proporcionamos la función logout
       }}
     >
       {children}

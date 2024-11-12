@@ -7,6 +7,7 @@ interface AuthState {
   tipo_usuario: string | null;
   token: string | null;
   setAuthState: (authState: Partial<AuthState>) => void;
+  logout: () => void; // Agregamos la función logout
 }
 
 export const AuthContext = createContext<AuthState>({
@@ -14,4 +15,5 @@ export const AuthContext = createContext<AuthState>({
   tipo_usuario: null,
   token: null,
   setAuthState: () => {},
+  logout: () => {}, // Valor por defecto
 });

@@ -1,23 +1,47 @@
-import React from "react";
-import { createNativeStackNavigator , NativeStackScreenProps } from "@react-navigation/native-stack";
-import Home from "../Screens/Home";
-import Perfil from "../Screens/Perfil";
+import React, { useContext } from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../Screens/Login";
 import BottomTabNavigator from "./BottomTabNavigator";
+import { AuthContext } from "../context/AuthContext";
+import Register from "../Screens/Register";
 
 export type RootStackParamList = {
     Home: undefined;
-    Perfil:undefined;
+    Perfil: undefined;
     Login: undefined;
-    BottomNavigator: undefined;
-}
+    BottomTabNavigator: undefined;
+    Register: undefined;
+};
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
-const MainNavigation = () => {
-    return(
-            <Stack.Navigator initialRouteName="Login">
-                <Stack.Screen name="Login" component={Login} options={{headerShown:false,title:''}} />
-                <Stack.Screen name="BottomNavigator" component={BottomTabNavigator} />
-            </Stack.Navigator>
-    )
-}
+
+const MainNavigation: React.FC = () => {
+    const { token } = useContext(AuthContext);
+
+    return (
+        <Stack.Navigator initialRouteName={token ? "BottomTabNavigator" : "Login"}>
+            {token ? (
+                <Stack.Screen
+                    name="BottomTabNavigator"
+                    component={BottomTabNavigator}
+                    options={{ headerShown: false }}
+                />
+            ) : (
+                <>
+                    <Stack.Screen
+                        name="Login"
+                        component={Login}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="Register"
+                        component={Register}
+                        options={{ headerShown: false }}
+                    />
+                </>
+            )}
+        </Stack.Navigator>
+    );
+};
+
 export default MainNavigation;
