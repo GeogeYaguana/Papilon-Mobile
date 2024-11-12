@@ -2,18 +2,46 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View, Text } from 'react-native';
 import Perfil from '../Screens/Perfil';
-
+import MapViewComponent from '../Componentes/Mapa/MapViewComponent';
 // Definir tipo para las rutas
 type BottomTabParamList = {
   Home: undefined;
   Perfil: undefined;
   Settings: undefined;
 };
+interface Restaurants {
+  id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+}
+
+const restaurants: Restaurants[] = [
+  {
+      id: '1',
+      name: 'Restaurante El Buen Sabor',
+      latitude: 37.78825,
+      longitude: -122.4324,
+  },
+  {
+      id: '2',
+      name: 'Pizzería La Italiana',
+      latitude: 37.78925,
+      longitude: -122.4314,
+  },
+  {
+      id: '3',
+      name: 'Sushi Zen',
+      latitude: 37.79025,
+      longitude: -122.4304,
+  },
+];
 
 // Pantallas de ejemplo
 const HomeScreen = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>Home Screen</Text>
+  
+  <View style={{ flex: 1 }}>
+    <MapViewComponent restaurants={restaurants} />
   </View>
 );
 
