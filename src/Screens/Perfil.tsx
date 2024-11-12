@@ -6,7 +6,7 @@ import { AuthContext } from '../context/AuthContext';
 import ProfileHeader from '../Componentes/ProfileHeader/ProfileHeader';
 import { usePerfil } from '../Hooks/usePerfil';
 import ButtonCustom from '../Componentes/Boton/ButtonCustom';
-
+import { useNavigation } from '@react-navigation/native';
 interface User {
   correo: string;
   fecha_registro: string;
@@ -21,6 +21,7 @@ interface User {
 type PerfilProps = NativeStackScreenProps<RootStackParamList, 'Perfil'>;
 
 const Perfil: React.FC<PerfilProps> = () => {
+  const navigation = useNavigation();
   const [user, setUser] = useState<User | null>(null);
   const { id_usuario, logout } = useContext(AuthContext);
   const { loading, error, profile, fetchPerfil } = usePerfil();

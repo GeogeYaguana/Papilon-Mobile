@@ -4,13 +4,14 @@ import Login from "../Screens/Login";
 import BottomTabNavigator from "./BottomTabNavigator";
 import { AuthContext } from "../context/AuthContext";
 import Register from "../Screens/Register";
-
+import Prueba from "../Screens/Prueba";
 export type RootStackParamList = {
     Home: undefined;
     Perfil: undefined;
     Login: undefined;
     BottomTabNavigator: undefined;
     Register: undefined;
+    Prueba: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -38,6 +39,12 @@ const MainNavigation: React.FC = () => {
                         component={Register}
                         options={{ headerShown: false }}
                     />
+                      <Stack.Screen
+                        name="Prueba"
+                        component={Prueba}
+                        options={{ headerShown: false }}
+                    />
+                    
                 </>
             )}
         </Stack.Navigator>

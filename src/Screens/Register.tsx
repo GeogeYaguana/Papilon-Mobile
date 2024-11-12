@@ -1,11 +1,13 @@
-// src/Screens/Register.tsx
-
-import React from 'react';
-import { View, Text, StyleSheet, Alert, TextInput, Image, ScrollView } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, StyleSheet, Alert, TextInput, Image, ScrollView, Button } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 import ButtonCustom from '../Componentes/Boton/ButtonCustom';
-
+import { uploadImageToFirebase } from '../Servicios/uploadImageToFirebase';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { AuthContext } from '../context/AuthContext';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../Navigation/MainNavigation';
 type FormData = {
   nombre: string;
   usuario_nombre: string;
@@ -17,27 +19,83 @@ type FormData = {
 };
 
 const API_Backend: string = 'http://192.168.100.190:5000';
+type RegisterProps = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
-const Register: React.FC = () => {
-  const { control, handleSubmit, formState: { errors } } = useForm<FormData>();
+const Register: React.FC<RegisterProps> = ({navigation}) => {
+  const { control, handleSubmit, formState: { errors }, setValue } = useForm<FormData>();
+  const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const { setAuthState } = useContext(AuthContext);
+
+  // Manejar selección de imagen
+  const selectImage = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        quality: 1,
+      },
+      (response) => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.errorMessage) {
+          console.error('ImagePicker Error: ', response.errorMessage);
+        } else if (response.assets && response.assets.length > 0) {
+          const uri = response.assets[0].uri || null;
+          setSelectedImageUri(uri);
+        }
+      }
+    );
+  };
 
   const onSubmit = async (data: FormData) => {
     try {
-      const response = await axios.post(`${API_Backend}/register`, data, {
+      setUploading(true);
+  
+      let imageUrl = data.url_imagen;
+  
+      // Si hay imagen seleccionada, súbela a Firebase
+      if (selectedImageUri) {
+        const uploadedUrl = await uploadImageToFirebase(selectedImageUri);
+        if (uploadedUrl) {
+          imageUrl = uploadedUrl;
+        } else {
+          Alert.alert('Error', 'No se pudo subir la imagen.');
+          setUploading(false);
+          return;
+        }
+      }
+  
+      // Construir el cuerpo de la solicitud POST
+      const finalData = {
+        ...data,
+        url_imagen: imageUrl,
+        tipo_usuario: 'cliente', // Siempre será cliente para este caso
+        puntos: 0, // Puntos iniciales por defecto
+      };
+  
+      // Realizar la solicitud POST al backend
+      const response = await axios.post(`${API_Backend}/crear_cliente`, finalData, {
         headers: { 'Content-Type': 'application/json' },
       });
-
+  
       if (response.status === 201) {
+
+        const { id_usuario, token } = response.data; // Suponiendo que devuelves estos datos
         Alert.alert('Registro exitoso', 'Tu cuenta ha sido creada correctamente.');
-        // Navegar al login o pantalla inicial
+        navigation.navigate('Login');
+        // Navegar a la pantalla principal o de inicio de sesión
+        // navigation.navigate('Home'); // Si usas React Navigation
       } else {
         Alert.alert('Error', 'No se pudo completar el registro.');
       }
     } catch (error) {
       console.error('Error durante el registro:', error);
       Alert.alert('Error', 'Ocurrió un problema durante el registro.');
+    } finally {
+      setUploading(false);
     }
   };
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -46,9 +104,7 @@ const Register: React.FC = () => {
       {/* Campo Nombre */}
       <Controller
         control={control}
-        rules={{
-          required: 'El nombre es obligatorio',
-        }}
+        rules={{ required: 'El nombre es obligatorio' }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             style={styles.textInput}
@@ -66,9 +122,7 @@ const Register: React.FC = () => {
       {/* Campo Usuario */}
       <Controller
         control={control}
-        rules={{
-          required: 'El nombre de usuario es obligatorio',
-        }}
+        rules={{ required: 'El nombre de usuario es obligatorio' }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             style={styles.textInput}
@@ -88,10 +142,7 @@ const Register: React.FC = () => {
         control={control}
         rules={{
           required: 'La contraseña es obligatoria',
-          minLength: {
-            value: 6,
-            message: 'La contraseña debe tener al menos 6 caracteres',
-          },
+          minLength: { value: 6, message: 'La contraseña debe tener al menos 6 caracteres' },
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
@@ -133,74 +184,39 @@ const Register: React.FC = () => {
       />
       {errors.correo && <Text style={{ color: 'red' }}>{errors.correo.message}</Text>}
 
-      {/* Campo Tipo de Usuario */}
       <Controller
-        control={control}
-        rules={{
-          required: 'El tipo de usuario es obligatorio',
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.textInput}
-            placeholder="Tipo de usuario (e.g., local, cliente)"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-        name="tipo_usuario"
-        defaultValue=""
-      />
+      control={control}
+      rules={{ required: 'El tipo de usuario es obligatorio' }}
+      render={({ field: { onChange, onBlur, value } }) => (
+        <TextInput
+          style={styles.textInput}
+          placeholder="Tipo de usuario (e.g., local, cliente)"
+          onBlur={onBlur}
+          onChangeText={onChange}
+          value={value}
+          editable={false} // Hacer el campo no editable para que siempre sea 'cliente'
+        />
+      )}
+      name="tipo_usuario"
+      defaultValue="cliente" // Valor por defecto
+    />
       {errors.tipo_usuario && <Text style={{ color: 'red' }}>{errors.tipo_usuario.message}</Text>}
 
-      {/* Campo URL Imagen */}
-      <Controller
-        control={control}
-        rules={{
-          required: 'La URL de la imagen es obligatoria',
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.textInput}
-            placeholder="URL de imagen"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-        name="url_imagen"
-        defaultValue=""
+      {/* Botón para seleccionar imagen */}
+      <Button
+        title="Seleccionar Imagen"
+        onPress={selectImage}
       />
-      {errors.url_imagen && <Text style={{ color: 'red' }}>{errors.url_imagen.message}</Text>}
-
-      {/* Campo Teléfono */}
-      <Controller
-        control={control}
-        rules={{
-          required: 'El teléfono es obligatorio',
-          pattern: {
-            value: /^[0-9]+$/,
-            message: 'Ingresa solo números',
-          },
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.textInput}
-            placeholder="Teléfono"
-            keyboardType="numeric"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-        name="telefono"
-        defaultValue=""
-      />
-      {errors.telefono && <Text style={{ color: 'red' }}>{errors.telefono.message}</Text>}
+      {selectedImageUri && (
+        <Image
+          source={{ uri: selectedImageUri }}
+          style={{ width: 200, height: 200, marginVertical: 10 }}
+        />
+      )}
 
       {/* Botón de Registro */}
       <ButtonCustom
-        title="Registrar"
+        title={uploading ? 'Subiendo...' : 'Registrar'}
         onPress={handleSubmit(onSubmit)}
         backgroundColor="#EEC21B"
         textColor="#fff"

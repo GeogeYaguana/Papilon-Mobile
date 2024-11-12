@@ -1,7 +1,7 @@
 // src/Screens/Login.tsx
 
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, Alert, TextInput, Image } from 'react-native';
+import { View, Text, StyleSheet, Alert, TextInput, Image, TouchableOpacity } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../Navigation/MainNavigation';
 import { useForm, Controller } from 'react-hook-form';
@@ -10,7 +10,6 @@ import ButtonCustom from '../Componentes/Boton/ButtonCustom';
 import { AuthContext } from '../context/AuthContext';
 import api , {setAuthorizationHeader} from '../context/AxiosInstance';
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
-
 type FormData = {
   usuario_nombre: string;
   password: string;
@@ -95,7 +94,11 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
         backgroundColor="#EEC21B" 
         textColor="#fff" 
         borderRadius={30} 
-      />      
+      /> 
+  {/* Botón para redirigir a Registro */}
+      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+        <Text style={styles.registerText}>¿No tienes cuenta? Regístrate aquí</Text>
+      </TouchableOpacity>          
     </View>
   );
 };
@@ -131,6 +134,11 @@ const styles = StyleSheet.create({
   image: {
     width: 300,  // Ancho de la imagen
     height: 200,  // Altura de la imagen
+  },
+  registerText: {
+    marginTop: 20,
+    color: '#0066cc',
+    textDecorationLine: 'underline',
   },
 
 });

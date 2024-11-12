@@ -7,13 +7,11 @@ import MainNavigation from './src/Navigation/MainNavigation';
 
 const App = () => {
   return (
-    <React.StrictMode>
     <AuthProvider>
       <NavigationContainer>
         <MainNavigation />
       </NavigationContainer>
     </AuthProvider>
-    </React.StrictMode>
   );
 };
 
