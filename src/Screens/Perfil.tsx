@@ -5,7 +5,6 @@ import { RootStackParamList } from '../Navigation/MainNavigation';
 import { AuthContext } from '../context/AuthContext';
 import ProfileHeader from '../Componentes/ProfileHeader/ProfileHeader';
 import { usePerfil } from '../Hooks/usePerfil';
-import ButtonCustom from '../Componentes/Boton/ButtonCustom';
 
 interface User {
   correo: string;
@@ -19,7 +18,6 @@ interface User {
 }
 
 type PerfilProps = NativeStackScreenProps<RootStackParamList, 'Perfil'>;
-
 const Perfil: React.FC<PerfilProps> = () => {
   const [user, setUser] = useState<User | null>(null);
   const { id_usuario, logout } = useContext(AuthContext);

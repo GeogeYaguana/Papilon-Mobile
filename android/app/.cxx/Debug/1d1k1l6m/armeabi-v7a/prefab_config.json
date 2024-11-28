@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "prefabPath": "/home/georgeyaguana/.gradle/caches/modules-2/files-2.1/com.google.prefab/cli/2.1.0/aa32fec809c44fa531f01dcfb739b5b3304d3050/cli-2.1.0-all.jar",
+  "packages": [
+    "/home/georgeyaguana/.gradle/caches/8.10.2/transforms/f1835740ad47e4105211fd90f9c6ca5f/transformed/react-android-0.76.1-debug/prefab",
+    "/home/georgeyaguana/Escritorio/Proyectos/Proyectos_laborables/papilonMobile/node_modules/react-native-reanimated/android/build/intermediates/prefab_package/debug/prefab",
+    "/home/georgeyaguana/.gradle/caches/8.10.2/transforms/f17d05ab89693f59863034d9dd750308/transformed/hermes-android-0.76.1-debug/prefab",
+    "/home/georgeyaguana/.gradle/caches/8.10.2/transforms/3edf1a87345f97a0a10d63bef50c344e/transformed/fbjni-0.6.0/prefab"
+  ]
+}

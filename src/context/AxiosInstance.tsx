@@ -1,9 +1,8 @@
 import axios from 'axios';
-
-const API_URL = 'http://192.168.100.190:5000'; // URL base de tu API
-
+import {API_URL,PORT} from '@env';
+const API_Backend = `${API_URL}:${PORT}`;
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: API_Backend,
   headers: {
     'Content-Type': 'application/json',
   },

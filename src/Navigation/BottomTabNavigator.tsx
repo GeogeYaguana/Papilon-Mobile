@@ -57,6 +57,7 @@ const Tab = createBottomTabNavigator<BottomTabParamList>();
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
+      initialRouteName='Home'
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let emoji: string;

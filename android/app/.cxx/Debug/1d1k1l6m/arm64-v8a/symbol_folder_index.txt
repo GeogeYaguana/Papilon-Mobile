@@ -1,0 +1,1 @@
+/home/georgeyaguana/Escritorio/Proyectos/Proyectos_laborables/papilonMobile/android/app/build/intermediates/cxx/Debug/1d1k1l6m/obj/arm64-v8a

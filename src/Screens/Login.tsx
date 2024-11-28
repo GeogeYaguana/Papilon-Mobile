@@ -9,13 +9,14 @@ import axios from 'axios';
 import ButtonCustom from '../Componentes/Boton/ButtonCustom';
 import { AuthContext } from '../context/AuthContext';
 import api , {setAuthorizationHeader} from '../context/AxiosInstance';
+import {API_URL,PORT} from '@env';
+const API_Backend = `${API_URL}:${PORT}`;
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 type FormData = {
   usuario_nombre: string;
   password: string;
 };
 
-const API_Backend: string = 'http://192.168.100.190:5000';
 
 const Login: React.FC<LoginProps> = ({ navigation }) => {
   const { control, handleSubmit, formState: { errors } } = useForm<FormData>();
@@ -129,6 +130,7 @@ const styles = StyleSheet.create({
     borderRadius:30,
     backgroundColor: 'white',
     paddingStart:30,
+    color: '#333',
   },
 
   image: {

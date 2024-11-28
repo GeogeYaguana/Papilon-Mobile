@@ -8,6 +8,8 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { AuthContext } from '../context/AuthContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../Navigation/MainNavigation';
+import {API_URL,PORT} from '@env';
+const API_Backend = `${API_URL}:${PORT}`;
 type FormData = {
   nombre: string;
   usuario_nombre: string;
@@ -18,7 +20,6 @@ type FormData = {
   telefono: string;
 };
 
-const API_Backend: string = 'http://192.168.100.190:5000';
 type RegisterProps = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
 const Register: React.FC<RegisterProps> = ({navigation}) => {
@@ -83,8 +84,6 @@ const Register: React.FC<RegisterProps> = ({navigation}) => {
         const { id_usuario, token } = response.data; // Suponiendo que devuelves estos datos
         Alert.alert('Registro exitoso', 'Tu cuenta ha sido creada correctamente.');
         navigation.navigate('Login');
-        // Navegar a la pantalla principal o de inicio de sesión
-        // navigation.navigate('Home'); // Si usas React Navigation
       } else {
         Alert.alert('Error', 'No se pudo completar el registro.');
       }
@@ -241,7 +240,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 15,
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: 'orange',
   },
   image: {
     width: 150,
