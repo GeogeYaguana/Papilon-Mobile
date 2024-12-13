@@ -5,13 +5,14 @@ import BottomTabNavigator from "./BottomTabNavigator";
 import { AuthContext } from "../context/AuthContext";
 import Register from "../Screens/Register";
 import Prueba from "../Screens/Prueba";
+import Categoria from "../Screens/Categoria";
 export type RootStackParamList = {
     Home: undefined;
     Perfil: undefined;
     Login: undefined;
     BottomTabNavigator: undefined;
     Register: undefined;
-    Prueba: undefined;
+    Categoria: {categoria :string};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -22,11 +23,19 @@ const MainNavigation: React.FC = () => {
     return (
         <Stack.Navigator initialRouteName={token ? "BottomTabNavigator" : "Login"}>
             {token ? (
-                <Stack.Screen
+                <>
+                   <Stack.Screen
                     name="BottomTabNavigator"
                     component={BottomTabNavigator}
                     options={{ headerShown: false }}
                 />
+                <Stack.Screen
+                name="Categoria"
+                component={Categoria}
+                options={{ headerShown: false }}
+                />
+                </>
+             
             ) : (
                 <>
                     <Stack.Screen
@@ -39,12 +48,6 @@ const MainNavigation: React.FC = () => {
                         component={Register}
                         options={{ headerShown: false }}
                     />
-                      <Stack.Screen
-                        name="Prueba"
-                        component={Prueba}
-                        options={{ headerShown: false }}
-                    />
-                    
                 </>
             )}
         </Stack.Navigator>

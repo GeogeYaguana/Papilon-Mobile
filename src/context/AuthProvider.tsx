@@ -1,8 +1,7 @@
-// src/Context/AuthProvider.tsx
-
 import React, { useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import api, { setAuthorizationHeader } from './AxiosInstance';
 
 interface AuthState {
   id_usuario: string | null;
@@ -33,11 +32,14 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
       await AsyncStorage.removeItem('id_usuario');
       await AsyncStorage.removeItem('tipo_usuario');
       await AsyncStorage.removeItem('userToken');
+
       setAuthStateInternal({
         id_usuario: null,
         tipo_usuario: null,
         token: null,
       });
+
+      setAuthorizationHeader(null); // Limpia el header de autorización
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
@@ -49,6 +51,10 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
         const id_usuario = await AsyncStorage.getItem('id_usuario');
         const tipo_usuario = await AsyncStorage.getItem('tipo_usuario');
         const token = await AsyncStorage.getItem('userToken');
+
+        if (token) {
+          setAuthorizationHeader(token); // Configura el token en axios
+        }
 
         if (id_usuario || tipo_usuario || token) {
           setAuthStateInternal({
@@ -82,8 +88,10 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
 
         if (authState.token !== null) {
           await AsyncStorage.setItem('userToken', authState.token);
+          setAuthorizationHeader(authState.token); // Configura el token en axios cada vez que cambie
         } else {
           await AsyncStorage.removeItem('userToken');
+          setAuthorizationHeader(null); // Limpia el header si no hay token
         }
       } catch (error) {
         console.error('Error al guardar el estado de autenticación:', error);
@@ -98,7 +106,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
       value={{
         ...authState,
         setAuthState,
-        logout, // Proporcionamos la función logout
+        logout,
       }}
     >
       {children}

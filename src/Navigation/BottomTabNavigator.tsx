@@ -1,13 +1,19 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, Text } from 'react-native';
+import { View, Text , ScrollView, FlatList, StyleSheet} from 'react-native';
 import Perfil from '../Screens/Perfil';
 import MapViewComponent from '../Componentes/Mapa/MapViewComponent';
+import Home from '../Screens/Home';
+import Header from '../Componentes/Header/Header';
+import Recomendados from '../Screens/Recomendados';
+import CategoryBarContainer from '../Componentes/Categorias';
 // Definir tipo para las rutas
 type BottomTabParamList = {
   Home: undefined;
   Perfil: undefined;
   Settings: undefined;
+  Categoria: {categoria :string};
+
 };
 interface Restaurants {
   id: string;
@@ -38,12 +44,60 @@ const restaurants: Restaurants[] = [
 ];
 
 // Pantallas de ejemplo
-const HomeScreen = () => (
-  
-  <View style={{ flex: 1 }}>
-    <MapViewComponent restaurants={restaurants} />
-  </View>
-);
+const HomeScreen = () => {
+  const components = [
+    {
+      id: 'header',
+      component: (
+        <Header
+          logoSource={{
+            uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/H%26M-Logo.svg/1024px-H%26M-Logo.svg.png',
+          }}
+        />
+      ),
+    },
+    {
+      id: 'carrusel',
+      component: <CategoryBarContainer />,
+    },
+    { 
+      id: 'map', 
+      component: <MapViewComponent restaurants={restaurants} /> 
+    },
+    { 
+      id: 'recomendados', 
+      component: <Recomendados /> 
+    },
+  ];
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={components}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <View style={styles.itemContainer}>{item.component}</View>}
+        contentContainerStyle={styles.contentContainer}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  itemContainer: {
+    marginVertical: 10,
+    // Agrega más estilos si es necesario
+  },
+  contentContainer: {
+    paddingVertical: 10,
+    // Agrega más estilos si es necesario
+  },
+});
+
+
 
 const SettingsScreen = () => (
   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

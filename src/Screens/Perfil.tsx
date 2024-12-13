@@ -15,6 +15,7 @@ interface User {
   tipo_usuario: string;
   url_imagen: string;
   usuario_nombre: string;
+  puntos: number;
 }
 
 type PerfilProps = NativeStackScreenProps<RootStackParamList, 'Perfil'>;
@@ -77,6 +78,8 @@ const Perfil: React.FC<PerfilProps> = () => {
       {user ? (
         <>
           <ProfileHeader user={user} onEditProfile={handleEditProfile} onLogOut={handleLogout}/>
+          
+
       
         </>
       ) : (
