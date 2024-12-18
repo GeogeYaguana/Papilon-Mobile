@@ -1,0 +1,1 @@
+/home/georgeyaguana/Escritorio/Proyectos/Proyectos_laborables/Papilon-Mobile/android/app/build/intermediates/cxx/Debug/27g18i4l/obj/armeabi-v7a
