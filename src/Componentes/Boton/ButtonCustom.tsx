@@ -1,60 +1,73 @@
+// src/Componentes/Boton/ButtonCustom.tsx
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle, Dimensions } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, GestureResponderEvent, StyleProp, ViewStyle } from 'react-native';
 
 type ButtonCustomProps = {
-  title: string;
-  onPress: () => void;
-  backgroundColor?: string;
-  textColor?: string;
-  padding?: number;
-  borderRadius?: number;
-  fontSize?: number;
-  style?: ViewStyle;
-  textStyle?: TextStyle;
+    title: string;
+    onPress: (event: GestureResponderEvent) => void;
+    backgroundColor?: string;
+    textColor?: string;
+    borderRadius?: number;
+    disabled?: boolean;
+    loading?: boolean;
+    style?: StyleProp<ViewStyle>;
 };
 
-const { width } = Dimensions.get('window');
-
 const ButtonCustom: React.FC<ButtonCustomProps> = ({
-  title,
-  onPress,
-  backgroundColor = '#F26538',
-  textColor = '#fff',
-  padding = 15,
-  borderRadius = 10,
-  fontSize = 16,
-  style,
-  textStyle,
+    title,
+    onPress,
+    backgroundColor = '#6200EE',
+    textColor = '#fff',
+    borderRadius = 30,
+    disabled = false,
+    loading = false,
+    style,
 }) => {
-  // Ajustar el tamaño de la fuente según el ancho de la pantalla
-  const adjustedFontSize = fontSize * (width / 375); // Aquí '375' es el ancho del iPhone 11 como referencia
-
-  return (
-    <TouchableOpacity
-      style={[
-        styles.button,
-        { backgroundColor, padding, borderRadius },
-        style,
-      ]}
-      onPress={onPress}
-    >
-    <Text style={[styles.buttonText, { color: textColor, fontSize: adjustedFontSize }, textStyle]}>
-      {String(title)}
-    </Text>
-
-    </TouchableOpacity>
-  );
+    return (
+        <TouchableOpacity
+            onPress={onPress}
+            activeOpacity={0.7}
+            style={[
+                styles.button,
+                {
+                    backgroundColor: disabled ? '#A5A5A5' : backgroundColor,
+                    borderRadius: borderRadius,
+                },
+                style,
+            ]}
+            disabled={disabled || loading}
+        >
+            {loading ? (
+                <ActivityIndicator size="small" color={textColor} />
+            ) : (
+                <Text style={[styles.text, { color: textColor }]}>{title}</Text>
+            )}
+        </TouchableOpacity>
+    );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    marginVertical: 10,
-    width: "30%", 
-  },
-  buttonText: {
-    fontWeight: 'bold',
-  },
+    button: {
+        width: '100%',
+        paddingVertical: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+        // Sombra para iOS
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        // Sombra para Android
+        elevation: 5,
+    },
+    text: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 });
 
 export default ButtonCustom;

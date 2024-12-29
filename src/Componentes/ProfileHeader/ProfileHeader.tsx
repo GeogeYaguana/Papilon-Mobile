@@ -14,12 +14,13 @@ interface User {
 
 interface ProfileHeaderProps {
   user: User;
+  id_cliente: number;
   onEditProfile: () => void; // Función que no retorna nada
   onLogOut: () => void; // Función que no retorna nada
 
 }
 
-const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, onEditProfile ,onLogOut}) => {
+const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user,id_cliente , onEditProfile ,onLogOut}) => {
   return (
     <View style={styles.container}>
       <Image
@@ -27,6 +28,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, onEditProfile ,onLo
         style={styles.profileImage}
       />
       <Text style={styles.userName}>{user.usuario_nombre}</Text>
+      <Text style={styles.userName}>{id_cliente}</Text>
       <Text style={styles.userEmail}>{user.correo}</Text>
       <TouchableOpacity onPress={onEditProfile} style={styles.editButton}>
         <Text style={styles.editButtonText}>Editar Perfil</Text>

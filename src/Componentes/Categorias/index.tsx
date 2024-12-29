@@ -1,1 +1,1 @@
-export {default} from './Categorias';
+export {default} from './CategoryBar';

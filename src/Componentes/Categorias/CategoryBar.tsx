@@ -1,18 +1,13 @@
 // src/components/presentational/CategoryBar/CategoryBar.tsx
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
-export interface Category {
-    id: string;
-    title: string;
-    icon: string; // Emoji icon
-  }
-  
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
+import { Category } from '../../types/types';
 interface CategoryBarProps {
   categories: Category[];
   onCategoryPress: (category: string) => void;
 }
 
-const CategoryBar: React.FC<CategoryBarProps> = ({ categories, onCategoryPress }) => {
+const CategoryBar: React.FC<CategoryBarProps> = React.memo(({ categories, onCategoryPress }) => {
   return (
     <View style={styles.container}>
       <FlatList
@@ -22,11 +17,17 @@ const CategoryBar: React.FC<CategoryBarProps> = ({ categories, onCategoryPress }
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.categoryButton}
-            onPress={() => onCategoryPress(item.title)}
+            onPress={() => onCategoryPress(item.id)}
             accessible={true}
             accessibilityLabel={`Categoría ${item.title}`}
           >
-            <Text style={styles.icon}>{item.icon}</Text>
+            {item.icon.startsWith('http') ? (
+              // Si `icon` es una URL, usa una imagen
+              <Image source={{ uri: item.icon }} style={styles.iconImage} />
+            ) : (
+              // Si `icon` es un emoji u otro texto, muestra un Text
+              <Text style={styles.icon}>{item.icon}</Text>
+            )}
             <Text style={styles.title}>{item.title}</Text>
           </TouchableOpacity>
         )}
@@ -34,13 +35,12 @@ const CategoryBar: React.FC<CategoryBarProps> = ({ categories, onCategoryPress }
       />
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 10,
     paddingHorizontal: 16,
-    backgroundColor: 'lightblue', // Fondo temporal
   },
   categoryButton: {
     marginRight: 12,
@@ -52,6 +52,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 24, // Tamaño del emoji
+  },
+  iconImage: {
+    width: 24,
+    height: 24,
+    marginBottom: 4,
   },
   title: {
     color: '#fff',

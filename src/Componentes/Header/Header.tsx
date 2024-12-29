@@ -44,7 +44,7 @@ const Header: React.FC<HeaderProps> = ({ logoSource }) => {
       }
     };
     fetchInfo();
-  }, [cliente, fetchClienteInfo]);
+  }, [cliente, fetchClienteInfo ]);
 
   if (clienteLoading || infoLoading) {
     return (
@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingTop: 20,
     paddingBottom: 20,
-    backgroundColor: 'lightblue',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,

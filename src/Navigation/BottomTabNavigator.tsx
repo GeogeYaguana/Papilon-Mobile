@@ -12,92 +12,9 @@ type BottomTabParamList = {
   Home: undefined;
   Perfil: undefined;
   Settings: undefined;
-  Categoria: {categoria :string};
+  Categoria: {categoria :number};
 
 };
-interface Restaurants {
-  id: string;
-  name: string;
-  latitude: number;
-  longitude: number;
-}
-
-const restaurants: Restaurants[] = [
-  {
-      id: '1',
-      name: 'Restaurante El Buen Sabor',
-      latitude: 37.78825,
-      longitude: -122.4324,
-  },
-  {
-      id: '2',
-      name: 'Pizzería La Italiana',
-      latitude: 37.78925,
-      longitude: -122.4314,
-  },
-  {
-      id: '3',
-      name: 'Sushi Zen',
-      latitude: 37.79025,
-      longitude: -122.4304,
-  },
-];
-
-// Pantallas de ejemplo
-const HomeScreen = () => {
-  const components = [
-    {
-      id: 'header',
-      component: (
-        <Header
-          logoSource={{
-            uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/H%26M-Logo.svg/1024px-H%26M-Logo.svg.png',
-          }}
-        />
-      ),
-    },
-    {
-      id: 'carrusel',
-      component: <CategoryBarContainer />,
-    },
-    { 
-      id: 'map', 
-      component: <MapViewComponent restaurants={restaurants} /> 
-    },
-    { 
-      id: 'recomendados', 
-      component: <Recomendados /> 
-    },
-  ];
-
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={components}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <View style={styles.itemContainer}>{item.component}</View>}
-        contentContainerStyle={styles.contentContainer}
-      />
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  itemContainer: {
-    marginVertical: 10,
-    // Agrega más estilos si es necesario
-  },
-  contentContainer: {
-    paddingVertical: 10,
-    // Agrega más estilos si es necesario
-  },
-});
-
-
 
 const SettingsScreen = () => (
   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -138,7 +55,7 @@ const BottomTabNavigator = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Perfil" component={Perfil} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>

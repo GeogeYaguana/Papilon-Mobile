@@ -1,58 +1,57 @@
-import React, { Component, useContext, useEffect } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { FlatList, StyleSheet, View, RefreshControl } from 'react-native';
 import Header from '../Componentes/Header/Header';
 import MapViewComponent from '../Componentes/Mapa/MapViewComponent';
 import Recomendados from './Recomendados';
-import CategoryBarContainer from '../Componentes/Categorias';
-
-
-interface Restaurants {
-  id: string;
-  name: string;
-  latitude: number;
-  longitude: number;
-}
-
-const restaurants: Restaurants[] = [
-  {
-    id: '1',
-    name: 'Restaurante El Buen Sabor',
-    latitude: 37.78825,
-    longitude: -122.4324,
-  },
-  {
-    id: '2',
-    name: 'Pizzería La Italiana',
-    latitude: 37.78925,
-    longitude: -122.4314,
-  },
-  {
-    id: '3',
-    name: 'Sushi Zen',
-    latitude: 37.79025,
-    longitude: -122.4304,
-  },
-];
+import CategoryBarContainer from '../Componentes/Categorias/CategoryBarContainer';
 
 const HomeScreen = () => {
+  const [points, setPoints] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Simulación de actualización de puntos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPoints((prevPoints) => prevPoints + 1); // Incrementa los puntos cada segundo
+    }, 1000);
+
+    return () => clearInterval(interval); // Limpia el intervalo al desmontar
+  }, []);
+
+  // Lógica para manejar la actualización
+  const onRefresh = () => {
+    setRefreshing(true);
+
+    // Simula una operación de actualización, como obtener datos desde un servidor
+    setTimeout(() => {
+      setPoints(0); // Resetea los puntos o realiza otra acción de actualización
+      setRefreshing(false);
+    }, 2000); // Tiempo de espera para simular la actualización
+  };
+
   const components = [
     {
       id: 'header',
       component: (
         <Header
-        logoSource={{
-          uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/H%26M-Logo.svg/1024px-H%26M-Logo.svg.png',
-        }}
-      />
+          logoSource={{
+            uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/H%26M-Logo.svg/1024px-H%26M-Logo.svg.png',
+          }}
+        />
       ),
-    },{
-      id:'carrusel',
-      Component:(
-        <CategoryBarContainer />
-      )
     },
-    { id: 'map', component: <MapViewComponent restaurants={restaurants} /> },
-    { id: 'recomendados', component: <Recomendados /> },
+    {
+      id: 'carrusel',
+      component: <CategoryBarContainer />,
+    },
+    {
+      id: 'map',
+      component: <MapViewComponent />,
+    },
+    {
+      id: 'recomendados',
+      component: <Recomendados />, // Pasamos los puntos como props si es necesario
+    },
   ];
 
   return (
@@ -60,8 +59,13 @@ const HomeScreen = () => {
       <FlatList
         data={components}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <View style={styles.itemContainer}>{item.component}</View>}
+        renderItem={({ item }) => (
+          <View style={styles.itemContainer}>{item.component}</View>
+        )}
         contentContainerStyle={styles.contentContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );
@@ -70,45 +74,15 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5', // Fondo neutro
+    backgroundColor: '#ffffff',
   },
   contentContainer: {
-    // Elimina cualquier margen superior e inferior
-    paddingHorizontal: 0, // Asegura que no haya espacio en los lados
-    paddingVertical: 0, // Quita márgenes superior e inferior
+    paddingHorizontal: 0,
+    paddingVertical: 0,
   },
   itemContainer: {
-    marginBottom: 0, // Quita espacio entre los elementos
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
     padding: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  error: {
-    color: 'red',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  noUser: {
-    fontSize: 18,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 20,
   },
 });
-
 
 export default HomeScreen;
